@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyID - Schülerausweis</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f2fa;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .card-container {
+            perspective: 1000px;
+            width: 540px;
+            height: 340px;
+        }
+
+        .id-card {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(10deg) rotateY(10deg);
+            box-shadow: 
+                20px 20px 60px rgba(0, 0, 0, 0.1),
+                -20px -20px 60px rgba(255, 255, 255, 0.8);
+            transition: transform 0.5s ease;
+            display: flex;
+            gap: 30px;
+        }
+
+        .id-card:hover {
+            transform: rotateX(0deg) rotateY(0deg);
+        }
+
+        .left-section {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .card-type {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .photo-area {
+            width: 150px;
+            height: 180px;
+            background: #f5f7ff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+            border: 2px dashed #ddd;
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .id-number {
+            text-align: center;
+            padding: 15px;
+            background: #f5f7ff;
+            border-radius: 10px;
+        }
+
+        .id-number-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .id-number-value {
+            font-size: 17px;
+            font-weight: 700;
+            color: #2c3e50;
+            letter-spacing: 2px;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .id-number-value:hover {
+            background-color: #f5f7ff;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2c3e50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 5px;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: #2c3e50 transparent transparent transparent;
+        }
+
+        .id-number-value:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .card-footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Hologramm-Effekt */
+        .hologram {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0.1) 0%,
+                rgba(255,255,255,0.3) 50%,
+                rgba(255,255,255,0.1) 100%);
+            border-radius: 50%;
+            animation: hologram 3s infinite;
+        }
+
+        @keyframes hologram {
+            0% {
+                transform: rotate(0deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: rotate(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: rotate(360deg);
+                opacity: 0.5;
+            }
+        }
+
+        .copy-success {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .copy-success.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="id-card">
+            <div class="hologram"></div>
+            
+            <div class="left-section">
+                <div class="card-header">
+                    <div class="logo">StudyID</div>
+                    <div class="card-type">Schülerausweis</div>
+                </div>
+                <div class="photo-area">
+                    Foto
+                </div>
+            </div>
+
+            <div class="right-section">
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Name</span>
+                        <span class="info-value">Max Mustermann</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Alter</span>
+                        <span class="info-value">18 Jahre</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Klasse</span>
+                        <span class="info-value">Q12 G9</span>
+                    </div>
+                </div>
+
+                <div class="id-number">
+                    <div class="id-number-label">ID-Nummer</div>
+                    <div class="id-number-value" onclick="copyToClipboard(this)" data-id="STU-JCRG-0118-4683">
+                        <!--STU-SSSS-AAJJ-NNNN-->
+                        <!--STU-Schulabkürzung-Schulart + Eintrittsjahr-Zufälliger numerischer Wert--> 
+                        <!--Schulart: 01-Gymnasium  02-Realschule  03-Hauptschule-->
+                        STU-JCRG-0118-4683
+                        <span class="tooltip">Kopieren</span>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    Gültig bis: 31.12.2024
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="copy-success">ID-Nummer kopiert!</div>
+
+    <script>
+        function copyToClipboard(element) {
+            const idNumber = element.getAttribute('data-id');
+            navigator.clipboard.writeText(idNumber).then(() => {
+                const successMessage = document.querySelector('.copy-success');
+                successMessage.classList.add('show');
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 2000);
+            }).catch(err => {
+                console.error('Fehler beim Kopieren:', err);
+            });
+        }
+    </script>
+</body>
+</html> 
