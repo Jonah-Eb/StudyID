@@ -1,0 +1,10 @@
+# Enable custom error pages
+ErrorDocument 404 /page/404.html
+
+# Enable URL rewriting
+RewriteEngine On
+
+# Redirect all requests to non-existent files to the 404 page
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /page/404.html [L] 
