@@ -2,7 +2,7 @@
 
 **StudyID** 
 
-📱 **Erhältlich im App Store und Google Play Store.**
+📱 ** Bald erhältlich im App Store und Google Play Store.**
 
 
 ---
