@@ -175,6 +175,14 @@
             visibility: visible;
         }
 
+        .id-number-value.copied .tooltip {
+            background-color: #27ae60;
+        }
+
+        .id-number-value.copied .tooltip::after {
+            border-color: #27ae60 transparent transparent transparent;
+        }
+
         .card-footer {
             text-align: center;
             font-size: 12px;
@@ -285,11 +293,15 @@
     <script>
         function copyToClipboard(element) {
             const idNumber = element.getAttribute('data-id');
+            const tooltip = element.querySelector('.tooltip');
+            
             navigator.clipboard.writeText(idNumber).then(() => {
-                const successMessage = document.querySelector('.copy-success');
-                successMessage.classList.add('show');
+                element.classList.add('copied');
+                tooltip.textContent = 'Kopiert';
+                
                 setTimeout(() => {
-                    successMessage.classList.remove('show');
+                    element.classList.remove('copied');
+                    tooltip.textContent = 'Kopieren';
                 }, 2000);
             }).catch(err => {
                 console.error('Fehler beim Kopieren:', err);

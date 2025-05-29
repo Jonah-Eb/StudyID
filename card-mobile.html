@@ -161,24 +161,12 @@
             visibility: visible;
         }
 
-        .copy-success {
-            position: fixed;
-            top: 20px;
-            right: 20px;
+        .id-number-value.copied .tooltip {
             background-color: #27ae60;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 14px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 1000;
         }
 
-        .copy-success.show {
-            opacity: 1;
-            visibility: visible;
+        .id-number-value.copied .tooltip::after {
+            border-color: #27ae60 transparent transparent transparent;
         }
 
         .card-footer {
@@ -232,8 +220,8 @@
             </div>
             
             <div class="photo-area">
-                Foto
-            </div>
+                <img src="https://picsum.photos/150/150" alt="Schülerfoto" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+            </div> 
 
             <div class="info-section">
                 <div class="info-row">
@@ -266,16 +254,19 @@
             </div>
         </div>
     </div>
-    <div class="copy-success">ID-Nummer kopiert!</div>
 
     <script>
         function copyToClipboard(element) {
             const idNumber = element.getAttribute('data-id');
+            const tooltip = element.querySelector('.tooltip');
+            
             navigator.clipboard.writeText(idNumber).then(() => {
-                const successMessage = document.querySelector('.copy-success');
-                successMessage.classList.add('show');
+                element.classList.add('copied');
+                tooltip.textContent = 'Kopiert';
+                
                 setTimeout(() => {
-                    successMessage.classList.remove('show');
+                    element.classList.remove('copied');
+                    tooltip.textContent = 'Kopieren';
                 }, 2000);
             }).catch(err => {
                 console.error('Fehler beim Kopieren:', err);
