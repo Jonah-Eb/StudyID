@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyID - Schülerausweis</title>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: rgba(0, 0, 0, 0.1);
+            --text-primary: #2c3e50;
+            --text-secondary: #666;
+            --accent-color: #3498db;
+            --bg-primary: #1a1f2c;
+            --bg-secondary: #2c3446;
+            --accent-gold: #d4af37;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(52, 152, 219, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 540px;
+            height: auto;
+            min-height: 340px;
+        }
+
+        .id-card {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(0deg) rotateY(0deg);
+            box-shadow: 
+                20px 20px 60px rgba(0, 0, 0, 0.2),
+                -20px -20px 60px rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: clamp(24px, 5vw, 32px);
+            font-weight: 800;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #fff, var(--accent-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .card-type {
+            font-size: clamp(12px, 3vw, 14px);
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .card-content {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+
+        .photo-area {
+            flex: 0 0 auto;
+            width: 150px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            margin: 0 auto;
+        }
+
+        .photo-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .info-section {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--accent-gold);
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .id-number {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .id-number-label {
+            font-size: 12px;
+            color: var(--accent-gold);
+            margin-bottom: 5px;
+        }
+
+        .id-number-value {
+            font-size: 17px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 2px;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .id-number-value:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(44, 62, 80, 0.9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 5px;
+            backdrop-filter: blur(5px);
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(44, 62, 80, 0.9) transparent transparent transparent;
+        }
+
+        .id-number-value:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .id-number-value.copied .tooltip {
+            background: rgba(39, 174, 96, 0.9);
+        }
+
+        .id-number-value.copied .tooltip::after {
+            border-color: rgba(39, 174, 96, 0.9) transparent transparent transparent;
+        }
+
+        .card-footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--accent-gold);
+            margin-top: auto;
+        }
+
+        /* Hologramm-Effekt */
+        .hologram {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, 
+                rgba(212, 175, 55, 0.1) 0%,
+                rgba(212, 175, 55, 0.3) 50%,
+                rgba(212, 175, 55, 0.1) 100%);
+            border-radius: 50%;
+            animation: hologram 3s infinite;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        @keyframes hologram {
+            0% {
+                transform: rotate(0deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: rotate(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: rotate(360deg);
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="id-card">
+            <div class="hologram"></div>
+            <div class="card-header">
+                <div class="logo">StudyID</div>
+                <div class="card-type">Schülerausweis</div>
+            </div>
+            
+            <div class="card-content">
+                <div class="photo-area">
+                    <img src="https://picsum.photos/150/180" alt="Schülerfoto">
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Name</span>
+                        <span class="info-value">Max Mustermann</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Alter</span>
+                        <span class="info-value">18 Jahre</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Klasse</span>
+                        <span class="info-value">Q12 G9</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="id-number">
+                <div class="id-number-label">ID-Nummer</div>
+                <div class="id-number-value" onclick="copyToClipboard(this)" data-id="STU-JCRG-0118-4683">
+                    STU-JCRG-0118-4683
+                    <span class="tooltip">Kopieren</span>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                Gültig bis: 31.07.2026
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(element) {
+            const idNumber = element.getAttribute('data-id');
+            const tooltip = element.querySelector('.tooltip');
+            
+            navigator.clipboard.writeText(idNumber).then(() => {
+                element.classList.add('copied');
+                tooltip.textContent = 'Kopiert';
+                
+                setTimeout(() => {
+                    element.classList.remove('copied');
+                    tooltip.textContent = 'Kopieren';
+                }, 2000);
+            }).catch(err => {
+                console.error('Fehler beim Kopieren:', err);
+            });
+        }
+    </script>
+</body>
+</html> 
