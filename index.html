@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudyID</title>
+    <link rel="stylesheet" href="style/index_transition/transitions.css">
     <style>
         /* Keyframes */
         @keyframes moveBlur {
@@ -175,32 +176,65 @@
 
         /* Button */
         .login-button {
-            background: linear-gradient(45deg, #3498db, #2980b9);
-            border: none;
+            padding: 15px 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
             border-radius: 30px;
-            padding: clamp(14px, 2.2vw, 16px) clamp(25px, 3.2vw, 30px);
-            font-size: clamp(1.1rem, 2.2vw, 1.3rem);
-            font-weight: 600;
+            transition: all 0.4s ease;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            font-weight: bold;
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
             margin: auto 0 40px 0;
-            color: white;
             text-decoration: none;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-button::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle,
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(255, 255, 255, 0) 70%
+            );
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .login-button:hover::after {
+            transform: scale(4);
+        }
+
+        .login-button:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
         .login-button span {
             text-decoration: none;
+            position: relative;
+            z-index: 1;
+            font-size: 1.4rem;
+            transition: transform 0.3s ease;
         }
 
-        .login-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-            background: linear-gradient(45deg, #2980b9, #3498db);
-            text-decoration: none;
+        .login-button:hover span {
+            transform: translateX(3px);
         }
 
         .button-link {
@@ -243,13 +277,15 @@
     </style>
 </head>
 <body>
+    <div class="transition-overlay"></div>
+    <div class="loading-spinner"></div>
     <div class="container">
         <div class="background-blur"></div>
         <div class="triangle"></div>
         <div class="triangle-2"></div>
         <div class="circle"></div>
         <div class="circle-2"></div>
-        <div class="content">
+        <div class="content page-content">
             <h1>Welcome<br>to<br><strong>Student ID</strong></h1>
             <p class="subtext">
                 Ihre digitale Lösung für die Identifizierung von Schülern.
@@ -257,7 +293,7 @@
                 und Ihre Informationen sicher zu verwalten.
             </p>
 
-            <a href="card-mobile.html" class="button-link">
+            <a href="pages/card-glass.html" class="button-link" data-transition="slide">
                 <button class="login-button">
                     <span>→</span> Login
                 </button>
@@ -268,5 +304,31 @@
             </p>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const links = document.querySelectorAll('a[data-transition]');
+            const overlay = document.querySelector('.transition-overlay');
+            const spinner = document.querySelector('.loading-spinner');
+            const content = document.querySelector('.page-content');
+
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const href = link.getAttribute('href');
+
+                    // Start transition
+                    content.classList.add('fade-out');
+                    overlay.classList.add('active');
+                    spinner.classList.add('active');
+
+                    // Navigate after animation
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 600);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
